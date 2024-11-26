@@ -1,72 +1,93 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { useNavigate } from 'react-router-dom';
 import "react-circular-progressbar/dist/styles.css";
+import { fetchQuizData, submitAnswer } from '../../../../services/api';
 
 const QuizInterface = () => {
   const navigate = useNavigate();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]); // For multi-choice support
   const [answers, setAnswers] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [startTime, setStartTime] = useState(Date.now());
 
-  const questions = [
-    {
-      question: "How do you judge what should be added in the next version of the app?",
-      options: [
-        "Data Analysis",
-        "User's feedback",
-        "Copy from similar product",
-        "Make a questionary",
-        "Personal feeling"
-      ],
-      correctAnswer: "Data Analysis"
-    },
-    {
-      question: "What is the primary goal of a UX design?",
-      options: [
-        "Increase aesthetics",
-        "Improve user experience",
-        "Reduce development costs",
-        "Focus on brand identity",
-        "Boost marketing"
-      ],
-      correctAnswer: "Improve user experience"
-    },
-    {
-      question: "Which method is best for collecting user feedback?",
-      options: [
-        "Surveys",
-        "Interviews",
-        "Focus groups",
-        "Analytics tools",
-        "All of the above"
-      ],
-      correctAnswer: "All of the above"
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchQuizData();
+        const apiData = response.data.data;
+        setQuestions(apiData);
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+      }
+    };
 
-  const totalQuestions = questions.length;
+    fetchData();
+  }, []);
+
+  const totalQuestions = questions?.length;
   const current = currentQuestionIndex + 1;
 
-  const handleNext = () => {
-    if (selectedOption !== null) {
-      const selectedAnswer = questions[currentQuestionIndex].options[selectedOption];
-      setAnswers([...answers, selectedAnswer]);
-
-      if (currentQuestionIndex < totalQuestions - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedOption(null); // Reset the selected option for the next question
+  const handleOptionToggle = (index) => {
+    const type = questions[currentQuestionIndex]?.type || "single"; // Default to single choice
+  
+    if (type === "single") {
+      setSelectedOptions([index]); // Only allow one option to be selected
+    } else if (type === "multi") {
+      if (selectedOptions.includes(index)) {
+        setSelectedOptions(selectedOptions.filter(opt => opt !== index)); // Deselect the option
       } else {
-        navigate("/result", { state: { answers } }); // Navigate to results with answers
+        setSelectedOptions([...selectedOptions, index]); // Add the option to the selected list
       }
-    } else {
-      alert("Please select an option before proceeding.");
+    }
+  };
+
+  const handleNext = async () => {
+    try {
+      if (selectedOptions.length > 0) {
+        const selectedAnswers = selectedOptions.map(
+          index => questions[currentQuestionIndex].options[index]
+        );
+
+        const endTime = Date.now();
+        const timeForCurrentQuestion = Math.round((endTime - startTime) / 1000);
+
+        // Update answers state with the current question's selected answers
+        const updatedAnswers = [
+          ...answers,
+          { 
+            questionId: questions[currentQuestionIndex].question,
+            selectedAnswers,
+            timeTaken: timeForCurrentQuestion
+          }
+        ];
+
+        setAnswers(updatedAnswers); // Set updated answers state
+
+        if (currentQuestionIndex < totalQuestions - 1) {
+          // Move to the next question after updating the answers
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setSelectedOptions([]);
+          setStartTime(Date.now());
+          const questionId = questions[currentQuestionIndex].question;
+          await submitAnswer(questionId, selectedAnswers, timeForCurrentQuestion);
+        } else {
+          // After the last question, navigate to the results page with the updated answers
+          navigate("/result", { state: { answers: updatedAnswers } });
+        }
+
+        
+      } else {
+        alert("Please select at least one option before proceeding.");
+      }
+    } catch (error) {
+      console.error("Error submitting answer:", error);
     }
   };
 
   return (
-
     <div className="min-h-screen flex flex-col align-center">
       <div className='bg-purple-200 h-[150px] w-full flex justify-center items-end'>
         <div className="w-[100px] h-[100px] -mb-[30px] z-10 p-2 rounded-full bg-white flex items-center justify-center">
@@ -89,23 +110,30 @@ const QuizInterface = () => {
 
       <div className='bg-white p-4 -mt-[20px] rounded-tl-[30px] rounded-tr-[30px]'>
         <h2 className="text-xl font-bold text-gray-800 mb-8 mt-[80px] px-4">
-          {questions[currentQuestionIndex].question}
+          {questions?.[currentQuestionIndex]?.question}
         </h2>
 
-        <div className="space-y-4 mb-8">
-          {questions[currentQuestionIndex].options.map((option, index) => (
+        <div className="space-y-4 mb-24">
+          {questions?.[currentQuestionIndex]?.image && (
+            <img
+              src={questions?.[currentQuestionIndex]?.image}
+              alt="Question"
+              className="w-full object-cover rounded-xl"
+            />
+          )}
+          {questions?.[currentQuestionIndex]?.options?.map((option, index) => (
             <button
               key={index}
-              onClick={() => setSelectedOption(index)}
+              onClick={() => handleOptionToggle(index)}
               className={`w-full p-4 rounded-xl text-left ${
-                selectedOption === index 
+                selectedOptions.includes(index)
                   ? 'bg-white shadow-lg border-2 border-purple-300' 
                   : 'bg-gray-50 hover:bg-white hover:shadow-md transition-all'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-5 h-5 rounded-full border-2 
-                ${selectedOption === index 
+                ${selectedOptions.includes(index)
                     ? 'border-purple-500 bg-purple-500' 
                     : 'border-gray-300'
                 }`} />

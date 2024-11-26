@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import upraisedLogo from '../images/upraised-logo.svg';
 
-const LandingPage = () => {
-  return (
+const HomeScreen = () => {
+
+ return (
     <div className="bg-custom-gradient bg-blend-multiply h-screen flex flex-col">
       <img
         src={upraisedLogo}
@@ -28,4 +29,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default HomeScreen;
