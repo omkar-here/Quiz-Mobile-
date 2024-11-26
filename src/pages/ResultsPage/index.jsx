@@ -14,10 +14,6 @@ const ResultsPage = () => {
   const answers = useMemo(() => location.state?.answers || [], [location.state]);
   const timeTakenForEachQuestion = useMemo(() => answers.map(answer => answer.timeTaken), [answers]);
 
-  console.log({answers})
-  console.log({quizAnswers})
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,7 +42,6 @@ const ResultsPage = () => {
     for (let i = 0; i < answers.length; i++) {
       const userAnswer = answers[i]?.selectedAnswers;
       const correctAnswer = quizAnswers[i]?.correctAnswer;
-      console.log({userAnswer, correctAnswer})
       if (userAnswer?.length !== correctAnswer?.length) {
         continue;
       }
@@ -58,9 +53,6 @@ const ResultsPage = () => {
     }
     return correctAnswers;
   };
-  
-
-  console.log({x:calculateCorrectAnswers()});
   
 
   const calculateScoreWithPenalty = () => {
