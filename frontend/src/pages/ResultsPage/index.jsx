@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useEffect, useMemo, useState } from 'react';
-import { fetchQuizAnswers, finishQuiz } from '../../services/api';
+import { useEffect, useMemo, useState } from "react";
+import { fetchQuizAnswers, finishQuiz } from "../../services/api";
 
 const ResultsPage = () => {
   const navigate = useNavigate();
@@ -11,8 +11,14 @@ const ResultsPage = () => {
   const [score, setScore] = useState(0);
   const [shouldUseFallback, setShouldUseFallback] = useState(true);
   // Get user answers and time taken from the previous page
-  const answers = useMemo(() => location.state?.answers || [], [location.state]);
-  const timeTakenForEachQuestion = useMemo(() => answers.map(answer => answer.timeTaken), [answers]);
+  const answers = useMemo(
+    () => location.state?.answers || [],
+    [location.state]
+  );
+  const timeTakenForEachQuestion = useMemo(
+    () => answers.map((answer) => answer.timeTaken),
+    [answers]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,28 +44,29 @@ const ResultsPage = () => {
   // Fallback logic: calculate the score manually in case backend scoring fails
   const calculateCorrectAnswers = () => {
     let correctAnswers = 0;
-  
+
     for (let i = 0; i < answers.length; i++) {
       const userAnswer = answers[i]?.selectedAnswers;
       const correctAnswer = quizAnswers[i]?.correctAnswer;
       if (userAnswer?.length !== correctAnswer?.length) {
         continue;
       }
-  
-      const isCorrect = userAnswer?.every(option => correctAnswer.includes(option));
+
+      const isCorrect = userAnswer?.every((option) =>
+        correctAnswer.includes(option)
+      );
       if (isCorrect) {
         correctAnswers++;
       }
     }
     return correctAnswers;
   };
-  
 
   const calculateScoreWithPenalty = () => {
     const correctAnswers = calculateCorrectAnswers();
-    let totalScore = correctAnswers * 10; // 10 points for each correct answer
+    let totalScore = (correctAnswers / quizAnswers.length) * 100; // 10 points for each correct answer
 
-    timeTakenForEachQuestion.forEach(timeTaken => {
+    timeTakenForEachQuestion.forEach((timeTaken) => {
       if (timeTaken > 120) {
         totalScore -= 20; // Severe penalty for taking more than 120 seconds
       } else if (timeTaken > 45) {
@@ -87,7 +94,7 @@ const ResultsPage = () => {
           <CircularProgressbar
             value={finalScore} // Use calculated or backend-provided score
             maxValue={100}
-            text={`${finalScore}%`}
+            text={`${isNaN(finalScore) ? 0 : finalScore}%`}
             styles={buildStyles({
               pathColor: "#FF3B3F",
               trailColor: "#f0f0f0",
@@ -100,7 +107,9 @@ const ResultsPage = () => {
         <div className="w-full space-y-4">
           <div className="bg-green-50 p-4 rounded-xl flex items-center gap-3">
             <span className="w-2 h-2 bg-[#44B77B] rounded-full"></span>
-            <span className="font-medium text-gray-700">{correctAnswers} Correct</span>
+            <span className="font-medium text-gray-700">
+              {correctAnswers} Correct
+            </span>
           </div>
           <div className="bg-red-50 p-4 rounded-xl flex items-center gap-3">
             <span className="w-2 h-2 bg-[#FF3B3F] rounded-full"></span>
@@ -111,15 +120,14 @@ const ResultsPage = () => {
         </div>
 
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="mt-auto w-full bg-red-500 text-white py-4 px-6 rounded-full font-semibold"
         >
           Start Again
         </button>
-        </div>
+      </div>
     </div>
   );
 };
 
 export default ResultsPage;
-
