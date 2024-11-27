@@ -2,7 +2,7 @@
 
 This is a web-based Quiz Application built with **React**. The app allows users to answer quiz questions with single-choice and multi-choice options, calculates scores based on their answers and time taken, and displays the results in an intuitive UI. The project follows best practices for code quality, RESTful APIs, and deployment.
 
-Video Link - https://youtube.com/shorts/lCl-soJ6_0I?feature=share
+Video Link - https://youtube.com/shorts/lCl-soJ6_0I?feature=share <br>
 Deployed Link - https://peaceful-zuccutto-c9857f.netlify.app
 
 ## Features
