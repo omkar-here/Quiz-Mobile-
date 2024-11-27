@@ -49,10 +49,13 @@ Make sure you have the following installed on your system:
 
 ### Running Locally
 
+#### Frontend
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/quiz-app.git
    cd quiz-app
+   cd frontend
    ```
 
 2. Install dependencies:
@@ -70,6 +73,28 @@ npm run dev
 ```bash
 http://localhost:5173
 ```
+
+#### Backend (Optional - The frontend will be up and running without this too)
+
+1. Clone the repository:
+   ```bash
+   cd ../backend
+   ```
+
+2. Install dependencies:
+  ```bash
+  npm install
+  ```
+
+3. Running Locally
+Start the development server:
+
+```bash
+node server.js
+```
+
+
+
 
 # API Documentation
 
