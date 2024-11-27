@@ -147,5 +147,52 @@ http://localhost:5173
 }
 ```
 
+### Quiz Questions and Correct Answers
+
+Here are the questions and the correct answers for the quiz:
+
+1. **How do you judge what should be added in the next version of the app?**
+   - **Options**:
+     - Data Analysis
+     - User's feedback
+     - Copy from similar product
+     - Make a questionary
+     - Personal feeling
+   - **Correct Answer**: Data Analysis (Single choice)
+
+2. **What is the primary goal of a UX design?**
+   - **Options**:
+     - Increase aesthetics
+     - Improve user experience
+     - Reduce development costs
+     - Focus on brand identity
+     - Boost marketing
+   - **Correct Answer**: Improve user experience (Single choice)
+
+3. **Which method is best for collecting user feedback?**
+   - **Options**:
+     - Surveys
+     - Interviews
+     - Focus groups
+     - Analytics tools
+     - All of the above
+   - **Correct Answer**: All of the above (Single choice)
+
+4. **Select all fruits from the following options.**
+   - **Options**:
+     - Apple
+     - Carrot
+     - Banana
+     - Potato
+   - **Correct Answer**: Apple, Banana (Multi-choice)
+
+5. **Which tools are commonly used for team collaboration?**
+   - **Options**:
+     - Slack
+     - Jira
+     - Zoom
+     - Canva
+     - Photoshop
+   - **Correct Answer**: Slack, Jira (Multi-choice)
 
 
