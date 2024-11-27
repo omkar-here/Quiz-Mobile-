@@ -54,7 +54,7 @@ Make sure you have the following installed on your system:
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/quiz-app.git
-   cd quiz-app
+   cd quiz-mobile
    cd frontend
    ```
 
@@ -76,7 +76,7 @@ http://localhost:5173
 
 #### Backend (Optional - The frontend will be up and running without this too)
 
-1. Clone the repository:
+1. Navigate to Backend folder:
    ```bash
    cd ../backend
    ```
