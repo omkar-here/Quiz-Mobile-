@@ -34,6 +34,7 @@ Deployed Link - https://peaceful-zuccutto-c9857f.netlify.app
 - **Backend**: (Placeholder for API, REST endpoints assumed)
 - **Deployment**: Vercel/Netlify
 - **Build Tools**: Vite
+- **Mock APIs**: Mocky.io
 
 ---
 
