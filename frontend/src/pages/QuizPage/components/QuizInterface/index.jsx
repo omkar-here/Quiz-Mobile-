@@ -17,7 +17,7 @@ const QuizInterface = () => {
     const fetchData = async () => {
       try {
         const response = await fetchQuizData();
-        const apiData = response.data.data;
+        const apiData = response?.data?.data;
         setQuestions(apiData);
       } catch (error) {
         console.error("Error fetching quiz data:", error);

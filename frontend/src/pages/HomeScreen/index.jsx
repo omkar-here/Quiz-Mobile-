@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import upraisedLogo from '../images/upraised-logo.svg';
+import upraisedLogo from './images/upraised-logo.svg'
 
 const HomeScreen = () => {
 
